@@ -1,0 +1,12 @@
+' Gambas class file
+
+Inherits Button
+
+
+Public Sub _new()
+
+Me.Height = 25
+Me.width = 25
+Me.Background = Color.White
+
+End

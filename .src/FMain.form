@@ -1,0 +1,59 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,166,97)
+  Padding = 10
+  { HBoxControl HBox
+    MoveScaled(0,0,140,4)
+    Background = Color.Background
+    Expand = True
+    Padding = 2
+    { ToolButtonStop ToolButton AllToolButtons
+      Name = "ToolButtonStop"
+      MoveScaled(2,0,4,4)
+      ToolTip = ("STOP!")
+      Picture = Picture["icon:/32/stop"]
+    }
+    { Panel1 Panel
+      MoveScaled(7,0,2,3)
+    }
+    { ToolButtonPlay ToolButton AllToolButtons
+      Name = "ToolButtonPlay"
+      MoveScaled(12,0,4,4)
+      ToolTip = ("Start - Get ready!")
+      Picture = Picture["icon:/32/play"]
+    }
+    { Panel4 Panel
+      MoveScaled(31,0,7,3)
+      Expand = True
+    }
+    { LCDLabelLScore LCDLabel
+      MoveScaled(43,0,7,4)
+      Background = Color.Black
+      Foreground = Color.Yellow
+      Sheared = True
+      HighlightColor = Color.Red
+    }
+    { Panel2 Panel
+      MoveScaled(51,0,39,3)
+    }
+    { LCDLabelRScore LCDLabel
+      MoveScaled(93,0,7,4)
+      Background = Color.Black
+      Foreground = Color.Yellow
+      Sheared = True
+      HighlightColor = Color.Red
+    }
+    { Panel3 Panel
+      MoveScaled(102,0,7,3)
+      Expand = True
+    }
+    { Panel5 Panel
+      MoveScaled(124,1,10,2)
+    }
+  }
+  { PanelPlayArea Panel
+    MoveScaled(6,8,97,54)
+    Expand = True
+  }
+}

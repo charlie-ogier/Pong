@@ -1,0 +1,145 @@
+' Gambas class file
+
+siBatL As Short
+siBatR As Short
+siRScore As Short
+siLScore As Short
+BatL As Bat
+BatR As Bat
+bGameEnd As Boolean
+bGameStart As Boolean
+
+Public Sub Form_Show()
+
+Me.Background = Color.Black
+LCDLabelLScore.text = Format(0, "000")
+LCDLabelRScore.text = Format(0, "000")
+
+End
+
+Public Sub GamePlay()
+
+While bGameEnd = False
+Start
+Wend
+bGameEnd = False
+
+PanelPlayArea.Children.Clear
+
+End
+
+Public Sub Start()
+Dim hBall As Ball
+Dim siX, siY, R1, R2 As Short
+Dim bSwitchLR, bSwitchDown As Boolean
+Dim oObj As Object
+
+hBall = New Ball(PanelPlayArea)
+siX = (PanelPlayArea.Width / 2) - (hBall.Width / 2)
+siY = (PanelPlayArea.Height / 2) - (hBall.Height / 2)
+hBall.X = siX
+hBall.Y = siY
+
+BatL = New Bat(PanelPlayArea)
+siBatL = PanelPlayArea.Height / 2 - (BatL.Height / 2)
+BatL.X = 5
+BatL.Y = siBatL
+
+BatR = New Bat(PanelPlayArea)
+siBatR = PanelPlayArea.Height / 2 - (BatR.Height / 2)
+BatR.X = PanelPlayArea.Width - (BatR.Width + 5)
+BatR.Y = siBatL
+
+Wait 1
+
+R1 = Rand(0, 1)
+R2 = Rand(0, 1)
+
+If R1 = 1 Then bSwitchDown = True
+If R2 = 1 Then bSwitchLR = True
+
+Do
+  'Wait 0.001
+  If bSwitchDown Then 
+    Inc siY
+  Else
+    Dec siY
+  End If
+  
+  If siY >= BatL.Y And siY <= BatL.y + BatL.H And siX < 25 Then 
+    bSwitchLR = True 
+  End If 
+  If siY >= PanelPlayArea.Height Then bSwitchDown = False 
+  If siY = 0 Then bSwitchDown = True
+  
+  If bSwitchLR Then 
+    Inc siX
+  Else
+    Dec siX
+  End If
+  
+  If siY >= BatR.Y And siY <= BatR.y + BatR.H And siX > PanelPlayArea.Width - (BatR.Width + 5 + hBall.Width) Then bSwitchLR = False
+  If siX < -5 Then 
+    Inc siLScore
+    Break
+  Endif
+
+  If siX > PanelPlayArea.Width + 5 Then
+    Inc siRScore
+    Break
+  Endif 
+  hBall.Y = siY
+  hBall.X = siX
+  BatL.Y = siBatL
+  BatR.Y = siBatR
+  PanelPlayArea.Background = Color.Black
+ Wait
+ If bGameEnd = True Then Break
+Loop
+
+PanelPlayArea.Children.clear
+
+LCDLabelRScore.Text = Format(siLScore, "000")
+LCDLabelLScore.Text = Format(siRScore, "000")
+
+Wait
+
+End
+
+Public Sub Form_KeyPress()
+Dim iCode As Integer = Key.Code
+
+If iCode = Key.Esc Then bGameEnd = True
+If iCode = Key["A"] Then siBatL -= 20
+If iCode = Key["Z"] Then siBatL += 20
+If iCode = Key.Up Then siBatR -= 20
+If iCode = Key.Down Then siBatR += 20
+
+If siBatL < 0 Then siBatL = 0
+If siBatL > PanelPlayArea.Height - BatL.Height Then siBatL = PanelPlayArea.Height - BatL.Height
+If siBatR < 0 Then siBatR = 0
+If siBatR > PanelPlayArea.Height - BatR.Height Then siBatR = PanelPlayArea.Height - BatR.Height
+
+End
+
+Public Sub Form_Resize()
+
+HBoxControl.Width = FMain.Width
+HBoxControl.Height = 32
+PanelPlayArea.Y = 32
+PanelPlayArea.X = 0
+PanelPlayArea.Height = FMain.Height - 32
+PanelPlayArea.Width = FMain.Width
+
+End
+
+Public Sub AllToolButtons_Click()
+
+Select Case Last.name
+  Case "ToolButtonStop" 
+    bGameEnd = True
+  Case "ToolButtonPlay"
+    GamePlay
+End Select
+
+End
