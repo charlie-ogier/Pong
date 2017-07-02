@@ -13,7 +13,7 @@
       Name = "ToolButtonStop"
       MoveScaled(2,0,4,4)
       ToolTip = ("STOP!")
-      Picture = Picture["icon:/32/stop"]
+      Picture = Picture["icon:/22/stop"]
     }
     { Panel1 Panel
       MoveScaled(7,0,2,3)
@@ -22,7 +22,16 @@
       Name = "ToolButtonPlay"
       MoveScaled(12,0,4,4)
       ToolTip = ("Start - Get ready!")
-      Picture = Picture["icon:/32/play"]
+      Picture = Picture["icon:/22/play"]
+    }
+    { Panel6 Panel
+      MoveScaled(17,0,2,3)
+    }
+    { ToolButtonAbout ToolButton AllToolButtons
+      Name = "ToolButtonAbout"
+      MoveScaled(22,0,4,4)
+      ToolTip = ("About")
+      Picture = Picture["icon:/22/info"]
     }
     { Panel4 Panel
       MoveScaled(31,0,7,3)
@@ -32,16 +41,19 @@
       MoveScaled(43,0,7,4)
       Background = Color.Black
       Foreground = Color.Yellow
+      Alignment = Align.Center
       Sheared = True
       HighlightColor = Color.Red
     }
-    { Panel2 Panel
-      MoveScaled(51,0,39,3)
+    { Label1 Label
+      MoveScaled(52,0,38,3)
+      Alignment = Align.Center
     }
     { LCDLabelRScore LCDLabel
       MoveScaled(93,0,7,4)
       Background = Color.Black
       Foreground = Color.Yellow
+      Alignment = Align.Center
       Sheared = True
       HighlightColor = Color.Red
     }
@@ -56,12 +68,12 @@
   { PanelPlayArea Panel
     MoveScaled(6,8,97,54)
     Expand = True
-    { LabelStart Label
-      MoveScaled(19,2,54,27)
-      Font = Font["Ubuntu,Bold,+14"]
-      Foreground = Color.White
-      Text = ("Pong\n\nLeft keys \"A\" & \"Z\"\nRight keys [Up Arrow] & [Down Arrow]")
-      Alignment = Align.Center
-    }
+  }
+  { LabelStart Label
+    MoveScaled(30,13,54,27)
+    Font = Font["Ubuntu,Bold,+14"]
+    Foreground = Color.White
+    Text = ("Pong\n\nLeft keys \"A\" & \"Z\"\nRight keys [Up Arrow] & [Down Arrow]")
+    Alignment = Align.Center
   }
 }

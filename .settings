@@ -45,11 +45,13 @@ Path="Pong.gambas"
 
 [OpenFile]
 File[1]=".src/FMain.form"
-Active=2
-File[2]=".src/FMain.class:4.104"
-Count=4
+Active=1
+File[2]=".src/FMain.class:32.57"
+Count=6
 File[3]=".src/Ball.class:0.4"
 File[4]=".src/Bat.class:15.6"
+File[5]=".src/About.form"
+File[6]=".src/About.class:10.5"
 
 [Watches]
 Count=1

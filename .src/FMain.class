@@ -45,15 +45,17 @@ End
 
 Public Sub Start()
 Dim hBall As Ball
-Dim siX, siY, R1, R2 As Short
+Dim siX, siY, siR1, siR2 As Short
 Dim bSwitchLR, bSwitchDown As Boolean
-Dim oObj As Object
 
 bGameStart = True
 hBall = New Ball(PanelPlayArea)
 hBall.Tag = "Remove"
-siX = (PanelPlayArea.Width / 2) - (hBall.Width / 2)
-siY = (PanelPlayArea.Height / 2) - (hBall.Height / 2)
+siR1 = Rand(-40, 40)
+siR2 = Rand(-40, 40)
+siX = ((PanelPlayArea.Width / 2) - (hBall.Width / 2)) + siR1
+siY = ((PanelPlayArea.Height / 2) - (hBall.Height / 2)) + siR2
+Label1.text = "Ball start pos : X = " & Str(siX) & " Y = " & Str(siY)
 hBall.X = siX
 hBall.Y = siY
 
@@ -70,11 +72,11 @@ bNewGame = False
 
 Wait 1
 
-R1 = Rand(0, 1)
-R2 = Rand(0, 1)
+siR1 = Rand(0, 1)
+siR2 = Rand(0, 1)
 
-If R1 = 1 Then bSwitchDown = True
-If R2 = 1 Then bSwitchLR = True
+If siR1 = 1 Then bSwitchDown = True
+If siR2 = 1 Then bSwitchLR = True
 
 Do
   Wait 0.002
@@ -164,12 +166,18 @@ Select Case Last.name
   Case "ToolButtonStop" 
     bGameEnd = True
   Case "ToolButtonPlay"
+    siLScore = 0
+    siRScore = 0
+    LCDLabelLScore.text = Format(0, "000")
+    LCDLabelRScore.text = Format(0, "000")
     bGameStart = True
     LabelStart.Visible = False
     PanelPlayArea.Children.clear
     Wait
     bNewGame = True
     GamePlay
+  Case "ToolButtonAbout"
+    About.ShowModal
 End Select
 
 End
