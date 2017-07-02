@@ -40,6 +40,9 @@ Geometry=[1247,94,224,280]
 [DebugWindow/sTest[1]]
 Geometry=[1471,84,224,280]
 
+[Executable]
+Path="Pong.gambas"
+
 [OpenFile]
 File[1]=".src/FMain.form"
 Active=2

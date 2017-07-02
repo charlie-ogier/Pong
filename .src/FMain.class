@@ -1,30 +1,45 @@
 ' Gambas class file
 
-siBatL As Short
-siBatR As Short
-siRScore As Short
-siLScore As Short
-BatL As Bat
-BatR As Bat
-bGameEnd As Boolean
-bGameStart As Boolean
+Public siBatL As Short
+Public siBatR As Short
+Public siRScore As Short
+Public siLScore As Short
+Public BatL As Bat
+Public BatR As Bat
+Public bGameEnd As Boolean
+Public bGameStart As Boolean
+Public bNewGame As Boolean
 
 Public Sub Form_Show()
 
 Me.Background = Color.Black
 LCDLabelLScore.text = Format(0, "000")
 LCDLabelRScore.text = Format(0, "000")
+StartDisplay
 
 End
 
 Public Sub GamePlay()
 
 While bGameEnd = False
-Start
+  Start
 Wend
 bGameEnd = False
 
 PanelPlayArea.Children.Clear
+StartDisplay
+
+End
+
+Public Sub StartDisplay()
+
+With LabelStart
+  .Visible = True
+  .Width = PanelPlayArea.Width
+  .Height = PanelPlayArea.Height
+  .X = PanelPlayArea.X
+  .Y = PanelPlayArea.Y
+End With
 
 End
 
@@ -34,21 +49,24 @@ Dim siX, siY, R1, R2 As Short
 Dim bSwitchLR, bSwitchDown As Boolean
 Dim oObj As Object
 
+bGameStart = True
 hBall = New Ball(PanelPlayArea)
+hBall.Tag = "Remove"
 siX = (PanelPlayArea.Width / 2) - (hBall.Width / 2)
 siY = (PanelPlayArea.Height / 2) - (hBall.Height / 2)
 hBall.X = siX
 hBall.Y = siY
 
 BatL = New Bat(PanelPlayArea)
-siBatL = PanelPlayArea.Height / 2 - (BatL.Height / 2)
+If bNewGame Then siBatL = PanelPlayArea.Height / 2 - (BatL.Height / 2)
 BatL.X = 5
 BatL.Y = siBatL
 
 BatR = New Bat(PanelPlayArea)
-siBatR = PanelPlayArea.Height / 2 - (BatR.Height / 2)
+If bNewGame Then siBatR = PanelPlayArea.Height / 2 - (BatR.Height / 2)
 BatR.X = PanelPlayArea.Width - (BatR.Width + 5)
-BatR.Y = siBatL
+BatR.Y = siBatR
+bNewGame = False
 
 Wait 1
 
@@ -59,7 +77,7 @@ If R1 = 1 Then bSwitchDown = True
 If R2 = 1 Then bSwitchLR = True
 
 Do
-  'Wait 0.001
+  Wait 0.002
   If bSwitchDown Then 
     Inc siY
   Else
@@ -94,9 +112,14 @@ Do
   BatR.Y = siBatR
   PanelPlayArea.Background = Color.Black
  Wait
- If bGameEnd = True Then Break
+ If bGameEnd = True Then 
+   Stop Event
+   Break
+ Endif
+
 Loop
 
+bGameStart = False
 PanelPlayArea.Children.clear
 
 LCDLabelRScore.Text = Format(siLScore, "000")
@@ -108,6 +131,8 @@ End
 
 Public Sub Form_KeyPress()
 Dim iCode As Integer = Key.Code
+
+If bGameStart = False Then Return
 
 If iCode = Key.Esc Then bGameEnd = True
 If iCode = Key["A"] Then siBatL -= 20
@@ -139,6 +164,11 @@ Select Case Last.name
   Case "ToolButtonStop" 
     bGameEnd = True
   Case "ToolButtonPlay"
+    bGameStart = True
+    LabelStart.Visible = False
+    PanelPlayArea.Children.clear
+    Wait
+    bNewGame = True
     GamePlay
 End Select
 

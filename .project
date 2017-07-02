@@ -2,17 +2,19 @@
 # Compiled with Gambas 3.9.2
 Title=Pong
 Startup=FMain
-Version=0.0.1
+Icon=icon.png
+Version=0.1.2
 Component=gb.image
-Component=gb.gui
+Component=gb.gtk3
 Component=gb.form
 Component=gb.media
 Component=gb.media.form
 Description="The game of Pong"
-Authors="Charlie Ogier 2017"
+Authors="Charlie Ogier 2017\nOn GitHub 02/07/2017"
 Environment="GB_GUI=gb.gtk"
 TabSize=2
 Translate=1
 Language=en_GB
+CreateShortcut=1
 Vendor=cogier
 Packager=1

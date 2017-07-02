@@ -2,6 +2,7 @@
 
 { Form Form
   MoveScaled(0,0,166,97)
+  Icon = Picture["icon.png"]
   Padding = 10
   { HBoxControl HBox
     MoveScaled(0,0,140,4)
@@ -55,5 +56,12 @@
   { PanelPlayArea Panel
     MoveScaled(6,8,97,54)
     Expand = True
+    { LabelStart Label
+      MoveScaled(19,2,54,27)
+      Font = Font["Ubuntu,Bold,+14"]
+      Foreground = Color.White
+      Text = ("Pong\n\nLeft keys \"A\" & \"Z\"\nRight keys [Up Arrow] & [Down Arrow]")
+      Alignment = Align.Center
+    }
   }
 }

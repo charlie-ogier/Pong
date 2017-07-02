@@ -2,10 +2,10 @@ FMain
 Pong
 0
 0
-0.0.1
+0.1.2
 
 gb.image
-gb.gui
+gb.gtk3
 gb.form
 gb.media
 gb.media.form
