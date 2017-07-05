@@ -2,7 +2,7 @@
 # Compiled with Gambas 3.9.2
 Title=Pong
 Startup=FMain
-Icon=icon.png
+Icon=icon1.png
 Version=0.1.2
 Component=gb.image
 Component=gb.gtk3

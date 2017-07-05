@@ -4,7 +4,7 @@ Inherits Button
 
 Public Sub _new()
 
-Me.Height = 100
+Me.Height = 75
 Me.width = 20
 Me.Background = Color.White
 
