@@ -40,13 +40,16 @@ Geometry=[1247,94,224,280]
 [DebugWindow/sTest[1]]
 Geometry=[1471,84,224,280]
 
+[DebugWindow/siRate]
+Geometry=[-8,6,224,280]
+
 [Executable]
 Path="Pong.gambas"
 
 [OpenFile]
 File[1]=".src/FMain.form"
 Active=1
-File[2]=".src/FMain.class:32.57"
+File[2]=".src/FMain.class:3.246"
 Count=6
 File[3]=".src/Ball.class:0.4"
 File[4]=".src/Bat.class:15.6"

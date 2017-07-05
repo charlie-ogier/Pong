@@ -71,9 +71,14 @@
   }
   { LabelStart Label
     MoveScaled(30,13,54,27)
+    Visible = False
     Font = Font["Ubuntu,Bold,+14"]
     Foreground = Color.White
     Text = ("Pong\n\nLeft keys \"A\" & \"Z\"\nRight keys [Up Arrow] & [Down Arrow]")
     Alignment = Align.Center
+  }
+  { Timer1 #Timer
+    #MoveScaled(134,36)
+    Delay = 100
   }
 }

@@ -1,5 +1,7 @@
 ' Gambas class file
 
+' Added keyboard speed settings and delay controls to improve bat response
+
 Public siBatL As Short
 Public siBatR As Short
 Public siRScore As Short
@@ -10,20 +12,24 @@ Public bGameEnd As Boolean
 Public bGameStart As Boolean
 Public bNewGame As Boolean
 
-Public Sub Form_Show()
+Public Sub Form_Open()
 
 Me.Background = Color.Black
 LCDLabelLScore.text = Format(0, "000")
 LCDLabelRScore.text = Format(0, "000")
-StartDisplay
+Settings.Read(Me, "Window")
+Timer1.start
 
 End
 
 Public Sub GamePlay()
 
+GetExistingKeyboardDelayAndRate
+SetNewKeyboardDelayAndRate
 While bGameEnd = False
   Start
 Wend
+ResetKeyboardDelayAndRate
 bGameEnd = False
 
 PanelPlayArea.Children.Clear
@@ -33,6 +39,7 @@ End
 
 Public Sub StartDisplay()
 
+Wait
 With LabelStart
   .Visible = True
   .Width = PanelPlayArea.Width
@@ -70,7 +77,7 @@ BatR.X = PanelPlayArea.Width - (BatR.Width + 5)
 BatR.Y = siBatR
 bNewGame = False
 
-Wait 1
+Wait 2
 
 siR1 = Rand(0, 1)
 siR2 = Rand(0, 1)
@@ -137,10 +144,10 @@ Dim iCode As Integer = Key.Code
 If bGameStart = False Then Return
 
 If iCode = Key.Esc Then bGameEnd = True
-If iCode = Key["A"] Then siBatL -= 20
-If iCode = Key["Z"] Then siBatL += 20
-If iCode = Key.Up Then siBatR -= 20
-If iCode = Key.Down Then siBatR += 20
+If iCode = Key["A"] Then siBatL -= 10
+If iCode = Key["Z"] Then siBatL += 10
+If iCode = Key.Up Then siBatR -= 10
+If iCode = Key.Down Then siBatR += 10
 
 If siBatL < 0 Then siBatL = 0
 If siBatL > PanelPlayArea.Height - BatL.Height Then siBatL = PanelPlayArea.Height - BatL.Height
@@ -179,5 +186,62 @@ Select Case Last.name
   Case "ToolButtonAbout"
     About.ShowModal
 End Select
+
+End
+
+Public Sub ResetKeyboardDelayAndRate()
+
+Shell "xset r rate " & Settings["Delay"] & " " & Settings["Rate"]
+
+End
+
+Public Sub SetNewKeyboardDelayAndRate()
+
+Shell "xset r rate 100 52"
+
+End
+
+Public Sub GetExistingKeyboardDelayAndRate()
+
+Dim sKeyb, sTemp, sChar As String
+Dim siCount, siX, siChar As Short
+Dim siRate As New Short[]
+
+Shell "xset -q" To sKeyb
+
+For Each sTemp In Split(sKeyb, gb.NewLine)
+  If InStr(sTemp, "auto repeat delay:") Then Break 'sRate = sTemp
+Next
+
+For siCount = InStr(sTemp, ":") + 1 To Len(sTemp)
+  siChar = Asc(Mid(sTemp, siCount, 1))
+  If siChar > 47 And siChar < 58 Then sChar &= Mid(sTemp, siCount, 1)
+  If siChar = 58 And siX = 0 Then 
+    siRate.add(Val(sChar))
+    sChar = ""
+    Inc siX
+    Continue
+  End If
+Next
+
+siRate.add(Val(sChar))
+
+Settings["Delay"] = siRate[0]
+Settings["Rate"] = siRate[1]
+
+End
+
+Public Sub Form_Close()
+
+ResetKeyboardDelayAndRate
+Settings.Write(Me, "Window")
+
+End
+
+Public Sub Timer1_Timer()
+
+Timer1.Stop
+LabelStart.Visible = True
+StartDisplay
 
 End
