@@ -1,11 +1,11 @@
 ' Gambas class file
 
-Inherits Button
+Inherits Panel                                                                'The Bat is a Panel
 
 Public Sub _new()
 
-Me.Height = 75
-Me.width = 20
-Me.Background = Color.White
+Me.Height = 75                                                                'Bat height
+Me.width = 20                                                                 'Bat width
+Me.Background = Color.White                                                   'Bat background colour
 
 End

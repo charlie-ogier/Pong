@@ -1,12 +1,11 @@
 ' Gambas class file
 
-Inherits Button
-
+Inherits Button                                                               'The ball is a Button!
 
 Public Sub _new()
 
-Me.Height = 25
-Me.width = 25
-Me.Background = Color.White
+Me.Height = 25                                                                'Ball height
+Me.width = 25                                                                 'Ball width
+Me.Background = Color.White                                                   'Ball background colour
 
 End

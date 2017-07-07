@@ -27,18 +27,27 @@
     { Panel6 Panel
       MoveScaled(17,0,2,3)
     }
+    { ToolButtonExit ToolButton AllToolButtons
+      Name = "ToolButtonExit"
+      MoveScaled(21,0,4,4)
+      ToolTip = ("Exit the program")
+      Picture = Picture["icon:/22/close"]
+    }
+    { Panel2 Panel
+      MoveScaled(26,0,2,3)
+    }
     { ToolButtonAbout ToolButton AllToolButtons
       Name = "ToolButtonAbout"
-      MoveScaled(22,0,4,4)
+      MoveScaled(29,0,4,4)
       ToolTip = ("About")
       Picture = Picture["icon:/22/info"]
     }
     { Panel4 Panel
-      MoveScaled(31,0,7,3)
+      MoveScaled(38,0,7,3)
       Expand = True
     }
     { LCDLabelLScore LCDLabel
-      MoveScaled(43,0,7,4)
+      MoveScaled(49,-1,7,4)
       Background = Color.Black
       Foreground = Color.Yellow
       Alignment = Align.Center
@@ -47,6 +56,7 @@
     }
     { Label1 Label
       MoveScaled(52,0,38,3)
+      Font = Font["Bold,+6"]
       Alignment = Align.Center
     }
     { LCDLabelRScore LCDLabel
@@ -62,7 +72,7 @@
       Expand = True
     }
     { Panel5 Panel
-      MoveScaled(124,1,10,2)
+      MoveScaled(124,1,22,2)
     }
   }
   { PanelPlayArea Panel

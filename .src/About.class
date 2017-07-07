@@ -1,8 +1,8 @@
 ' Gambas class file
 
 
-Public Sub ButtonDone_Click()
+Public Sub ButtonDone_Click()                                                 'When the 'Done' button is clicked
 
-  Me.Close
+Me.Close                                                                      'Close the Form
 
 End
