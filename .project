@@ -3,7 +3,7 @@
 Title=Pong
 Startup=FMain
 Icon=icon1.png
-Version=0.1.3
+Version=0.2.0
 Component=gb.image
 Component=gb.gtk3
 Component=gb.form

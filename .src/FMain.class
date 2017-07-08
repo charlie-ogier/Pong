@@ -43,6 +43,9 @@ FMain.Resizable = True                                                          
 PanelPlayArea.Children.Clear                                                                    'Clear the 'Play area of bats and ball'
 StartDisplay                                                                                    'Display the keyboard keys to use
 
+Catch                                                                                           'Every effort is being made not to leave the keyboard settings in 'Game' mode on exit
+  ResetKeyboardDelayAndRate                                                                     'Reset the keyboard delay and rate settings
+
 End
 
 Public Sub StartDisplay()                                                                       'Display the keyboard keys to use
@@ -90,12 +93,12 @@ BatR.X = PanelPlayArea.Width - (BatR.Width + 5)                                 
 BatR.Y = siBatR                                                                                 'Set the Bat's position
 bNewGame = False                                                                                'Set the bNewGame to false. This stops the Bats being repositioned with each new Ball
 
-Label1.Text = 2
-Wait 1
-Label1.Text = 1
-Wait 1
-Label1.Text = ""
-Mouse.move(0, 0)
+LabelTop.Text = 2                                                                               'Display "2" in LabelTop
+Wait 1                                                                                          'Wait a second
+LabelTop.Text = 1                                                                               'Display "1" in LabelTop
+Wait 1                                                                                          'Wait a second
+LabelTop.Text = ""
+Mouse.move(0, 0)                                                                                'Move the mouse cursor to the corner of the screen
 
 siR1 = Rand(0, 1)                                                                               'Get a random number between 0 and 1
 siR2 = Rand(0, 1)                                                                               'Get a random number between 0 and 1
@@ -170,11 +173,6 @@ End
 Public Sub Form_KeyPress()                                                                      'To capture the users key presses
 Dim iCode As Integer = Key.Code                                                                 'Store the pressed key
 
-' If iCode = Key["S"] And If Key.Control Then 
-'   AllToolButtons_Click("ToolButtonPlay")
-'   Return
-' End If
-
 If bGameStart = False Then Return                                                               'If the game has not started, get out of here
 
 If iCode = Key.Esc Then bGameEnd = True                                                         'If the [Esc] key is pressed then set bGameEnd to True
@@ -224,7 +222,6 @@ Select Case sKey                                                                
     About.ShowModal                                                                             'Show the about Form
   Case "ToolButtonExit"                                                                         'If it's the 'Exit' button then..
     Me.Close                                                                                    'Close the Form
-    
 End Select
 
 End
@@ -257,7 +254,7 @@ Next
 For siCount = InStr(sTemp, ":") + 1 To Len(sTemp)                                               'Count through the text starting at the 1st ':'
   siChar = Asc(Mid(sTemp, siCount, 1))                                                          'Find the ASCII code of the character
   If siChar > 47 And siChar < 58 Then sChar &= Mid(sTemp, siCount, 1)                           'If it is a number (not text) then add it to sChar
-  If siChar = 58 And siX = 0 Then                                                               'If it is ':' then..
+  If siChar = 58 And siX = 0 Then                                                               'If it is ':' and siX = 0 then..
     siRate.add(Val(sChar))                                                                      'Add the collected value to siRate[] (The keyboard delay time)
     sChar = ""                                                                                  'Reset sChar
     Inc siX                                                                                     'Increase siX

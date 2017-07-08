@@ -54,7 +54,7 @@
       Sheared = True
       HighlightColor = Color.Red
     }
-    { Label1 Label
+    { LabelTop Label
       MoveScaled(52,0,38,3)
       Font = Font["Bold,+6"]
       Alignment = Align.Center

@@ -49,7 +49,7 @@ Path="Pong.gambas"
 [OpenFile]
 File[1]=".src/FMain.form"
 Active=2
-File[2]=".src/FMain.class:0.20"
+File[2]=".src/FMain.class:122.264"
 Count=6
 File[3]=".src/Ball.class:101.8"
 File[4]=".src/Bat.class:100.8"
