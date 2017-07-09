@@ -1,7 +1,6 @@
 ' Gambas class file
 
 ' Added keyboard speed settings and delay controls to improve bat response 04/07/2017
-'TODO: Set up a 1 player game
 
 Public siBatL As Short                                                                          'LH Bat position
 Public siBatR As Short                                                                          'RH bat position
@@ -12,9 +11,15 @@ Public BatR As Bat                                                              
 Public bGameEnd As Boolean                                                                      'Game over indicator
 Public bGameStart As Boolean                                                                    'Game start indicator
 Public bNewGame As Boolean                                                                      'New game indicator
+Public bA As Boolean
+Public bZ As Boolean
+Public bUp As Boolean
+Public bDown As Boolean
+Public b1Player As Boolean
 
 Public Sub Form_Open()
-Stop Event
+
+'Stop Event
 SetUpLCDs                                                                                       'Set up the Score displays
 Settings.Read(Me, "Window")                                                                     'Get the window settings
 
@@ -30,21 +35,15 @@ End
 Public Sub GamePlay()                                                                           'Let's play!
 
 FMain.Resizable = False                                                                         'Stop the screen being resized during play
-GetExistingKeyboardDelayAndRate                                                                 'Get the existing keyboard delay and repeat rates
 
 While bGameEnd = False                                                                          'While the game is still being played..
-  SetNewKeyboardDelayAndRate                                                                    'Set the new keyboard delay and repeat rates
   Start                                                                                         'Add another Ball and play..
 Wend
 
-ResetKeyboardDelayAndRate                                                                       'Reset the keyboard delay and repeat rates
 bGameEnd = False                                                                                'Reset variable
 FMain.Resizable = True                                                                          'Allow screen resizing
 PanelPlayArea.Children.Clear                                                                    'Clear the 'Play area of bats and ball'
 StartDisplay                                                                                    'Display the keyboard keys to use
-
-Catch                                                                                           'Every effort is being made not to leave the keyboard settings in 'Game' mode on exit
-  ResetKeyboardDelayAndRate                                                                     'Reset the keyboard delay and rate settings
 
 End
 
@@ -70,8 +69,10 @@ End
 
 Public Sub Start()                                                                              'Game on..
 Dim hBall As Ball                                                                               'The ball
-Dim siX, siY, siR1, siR2 As Short                                                               'Various variables
+Dim siX, siY, siR1, siR2, siRand, siBounce As Short                                                               'Various variables
 Dim bSwitchLR, bSwitchDown As Boolean                                                           'To control the ball's direct
+
+TimerKeys.Start
 
 bGameStart = True                                                                               'Set bGameStart to True
 hBall = New Ball(PanelPlayArea)                                                                 'Add the ball to the 'Play area'
@@ -93,6 +94,11 @@ BatR.X = PanelPlayArea.Width - (BatR.Width + 5)                                 
 BatR.Y = siBatR                                                                                 'Set the Bat's position
 bNewGame = False                                                                                'Set the bNewGame to false. This stops the Bats being repositioned with each new Ball
 
+If b1Player Then 
+  BatL.Height = PanelPlayArea.Height
+  BatL.Y = 0
+End If
+
 LabelTop.Text = 2                                                                               'Display "2" in LabelTop
 Wait 1                                                                                          'Wait a second
 LabelTop.Text = 1                                                                               'Display "1" in LabelTop
@@ -106,37 +112,49 @@ siR2 = Rand(0, 1)                                                               
 If siR1 = 1 Then bSwitchDown = True                                                             'Randomize - Will the ball go up or down?
 If siR2 = 1 Then bSwitchLR = True                                                               'Randomize - Will the ball go left or right?
 
+siRand = Rand(1, 3)
+
 Do
-  Wait 0.002                                                                                    'Ball speed control
+  Wait 0.01                                                                                    'Ball speed control
   If bSwitchDown Then                                                                           'If the Ball is going down then..
-    Inc siY                                                                                     'Increase siY
+    'Inc siY                                                                                     'Increase siY
+    siY += siRand
   Else                                                                                          'Else the Ball is going up so..
-    Dec siY                                                                                     'Decrease siY
+    'Dec siY                                                                                     'Decrease siY
+    siY -= siRand
   End If
   
   If siY >= BatL.Y And siY <= BatL.y + BatL.H And siX < 25 Then                                 'If the Ball 'touches' the LH Bat then
+    siRand += BounceAngle(siY, False)
     bSwitchLR = True                                                                            'Set switch to True
   End If 
-  If siY >= PanelPlayArea.Height Then bSwitchDown = False                                       'If the Ball has reached the top of the 'Play area' change its direction
-  If siY = 0 Then bSwitchDown = True                                                            'If the Ball has reached the bottom of the 'Play area' change its direction
   
+  If siY >= PanelPlayArea.Height Then bSwitchDown = False                                       'If the Ball has reached the top of the 'Play area' change its direction
+  If siY <= 0 Then bSwitchDown = True                                                            'If the Ball has reached the bottom of the 'Play area' change its direction
+ 
+ 'LabelTop.text = siY
+
+
   If bSwitchLR Then                                                                             'If the Ball is going right then..
-    Inc siX                                                                                     'Increase siX
+    'Inc siX                                                                                     'Increase siX
+    siX += 5
   Else                                                                                          'Else the Ball is going left so..
-    Dec siX                                                                                     'Decrease siX
+    'Dec siX                                                                                     'Decrease siX
+    siX -= 5
   End If
 
   If siY >= BatR.Y And siY <= BatR.y + BatR.H And siX > PanelPlayArea.Width - (BatR.Width + 5 + hBall.Width) Then 'If the Ball 'touches' the RH Bat then
+    siRand += BounceAngle(siY, True)
     bSwitchLR = False                                                                           'Change the Ball's direction
   End If 
   
-  If siX < -5 Then                                                                              'If the Ball was not 'Batted' by the LH Bat then..
+  If siX < -10 Then                                                                              'If the Ball was not 'Batted' by the LH Bat then..
     Inc siLScore                                                                                'Increase the RH score
     If siLScore > 998 Then bGameEnd = True                                                      'If you get to 999 that's enough!
     Break                                                                                       'Get out of here
   Endif
 
-  If siX > PanelPlayArea.Width + 5 Then                                                         'If the Ball was not 'Batted' by the RH Bat then..
+  If siX > PanelPlayArea.Width + 10 Then                                                         'If the Ball was not 'Batted' by the RH Bat then..
     Inc siRScore                                                                                'Increase the LH score
     If siLScore > 998 Then bGameEnd = True                                                      'If you get to 999 that's enough!
     Break                                                                                       'Get out of here
@@ -157,6 +175,8 @@ Do
 
 Loop                                                                                            'End of Do..Loop
 
+TimerKeys.Stop
+
 bGameStart = False                                                                              'Set bGameStart to False
 PanelPlayArea.Children.clear                                                                    'Clear the 'Play area' of Bats and Ball
 
@@ -165,8 +185,26 @@ LCDLabelRScore.text = Format(siLScore, "000")                                   
 
 Wait                                                                                            'Wiz around the 'Event loop'
 
-Catch                                                                                           'Every effort is being made not to leave the keyboard settings in 'Game' mode on exit
-  ResetKeyboardDelayAndRate                                                                     'Reset the keyboard delay and rate settings
+End
+
+Public Sub BounceAngle(siY As Short, bLR As Boolean) As Short
+Dim siTMB, siReturn As Short
+
+If bLR Then 
+  siTMB = ((siY - BatR.Y) / BatR.Height) * 100
+Else
+  siTMB = ((siY - BatL.Y) / BatL.Height) * 100
+End If
+
+If siTMB <= 33 Then siReturn = -1
+If siTMB >= 66 Then siReturn = 1
+If siTMB > 33 And siTMB < 66 Then siReturn = 0
+
+'LabelTop.Text = "Bat pos " & siReturn
+
+Return siReturn
+
+'Stop
 
 End
 
@@ -176,10 +214,33 @@ Dim iCode As Integer = Key.Code                                                 
 If bGameStart = False Then Return                                                               'If the game has not started, get out of here
 
 If iCode = Key.Esc Then bGameEnd = True                                                         'If the [Esc] key is pressed then set bGameEnd to True
-If iCode = Key["A"] Then siBatL -= 10                                                           'If the 'A' key is pressed then move the LH Bat up 10 
-If iCode = Key["Z"] Then siBatL += 10                                                           'If the 'Z' key is pressed then move the LH Bat down 10 
-If iCode = Key.Up Then siBatR -= 10                                                             'If the 'UP' key is pressed then move the RH Bat up 10 
-If iCode = Key.Down Then siBatR += 10                                                           'If the 'DOWN' key is pressed then move the RH Bat down 10 
+If iCode = Key["A"] Then bA = True
+If iCode = Key["Z"] Then bZ = True
+If iCode = Key.Up Then bUp = True
+If iCode = Key.Down Then bDown = True
+
+End
+
+Public Sub Form_KeyRelease()
+Dim iCode As Integer = Key.Code                                                                 'Store the pressed key
+
+If bGameStart = False Then Return                                                               'If the game has not started, get out of here
+
+If iCode = Key.Esc Then bGameEnd = False                                                         'If the [Esc] key is pressed then set bGameEnd to False
+If iCode = Key["A"] Then bA = False
+If iCode = Key["Z"] Then bZ = False
+If iCode = Key.Up Then bUp = False
+If iCode = Key.Down Then bDown = False
+
+End
+
+Public Sub TimerKeys_Timer()
+Dim byMove As Byte = 8
+
+If bA Then siBatL -= byMove 
+If bZ Then siBatL += byMove
+If bUp Then siBatR -= byMove 
+If bDown Then siBatR += byMove
 
 If siBatL < 0 Then siBatL = 0                                                                   'If the LH Bat is at the top of the area stop it running off the screen
 If siBatL > PanelPlayArea.Height - BatL.Height Then siBatL = PanelPlayArea.Height - BatL.Height 'If the LH Bat is at the bottom of the area stop it running off the screen
@@ -222,56 +283,19 @@ Select Case sKey                                                                
     About.ShowModal                                                                             'Show the about Form
   Case "ToolButtonExit"                                                                         'If it's the 'Exit' button then..
     Me.Close                                                                                    'Close the Form
+  Case "ToolButtonOnePlayer"
+    b1Player = Not b1Player
+    If b1Player Then 
+      ToolButtonOnePlayer.Text = "1" 
+    Else 
+      ToolButtonOnePlayer.Text = "2" 
+    Endif
 End Select
-
-End
-
-Public Sub ResetKeyboardDelayAndRate()
-
-Shell "xset r rate " & Settings["Delay"] & " " & Settings["Rate"]                               'Reset the keyboard settings to their original state
-
-End
-
-Public Sub SetNewKeyboardDelayAndRate()
-
-Shell "xset r rate 100 52"                                                                      'Set the keyboard to ..FAST..
-
-End
-
-Public Sub GetExistingKeyboardDelayAndRate()                                                    'This routine finds the keyboard settings
-Dim sKeyb, sTemp, sChar As String                                                               'Various variables
-Dim siCount, siX, siChar As Short                                                               'Various variables
-Dim siRate As New Short[]                                                                       'To store the found values
-
-If Settings["Delay"] <> "" And Settings["Rate"] <> "" Then Return                               'If these settings have already been saved then get out of here
-
-Shell "xset -q" To sKeyb                                                                        'Shell the output of 'xset' to sKeyb
-
-For Each sTemp In Split(sKeyb, gb.NewLine)                                                      'For each line of text in sKeyb
-  If InStr(sTemp, "auto repeat delay:") Then Break                                              'If 'auto r..' is found then this is what is required to get out of here
-Next
-
-For siCount = InStr(sTemp, ":") + 1 To Len(sTemp)                                               'Count through the text starting at the 1st ':'
-  siChar = Asc(Mid(sTemp, siCount, 1))                                                          'Find the ASCII code of the character
-  If siChar > 47 And siChar < 58 Then sChar &= Mid(sTemp, siCount, 1)                           'If it is a number (not text) then add it to sChar
-  If siChar = 58 And siX = 0 Then                                                               'If it is ':' and siX = 0 then..
-    siRate.add(Val(sChar))                                                                      'Add the collected value to siRate[] (The keyboard delay time)
-    sChar = ""                                                                                  'Reset sChar
-    Inc siX                                                                                     'Increase siX
-    Continue                                                                                    'Jump to the next iteration of the loop
-  End If
-Next
-
-siRate.add(Val(sChar))                                                                          'Add the 2nd collected value to siRate (The keyboard repeat time)
-
-Settings["Delay"] = siRate[0]                                                                   'Save the value as a Setting
-Settings["Rate"] = siRate[1]                                                                    'Save the value as a Setting
 
 End
 
 Public Sub Form_Close()                                                                         'When the program closes
 
-ResetKeyboardDelayAndRate                                                                       'Reset the keyboard to its original settings
 FMain.Hide
 AllToolButtons_Click("ToolButtonStop")
 AllToolButtons_Click("ToolButtonExit")

@@ -29,25 +29,36 @@
     }
     { ToolButtonExit ToolButton AllToolButtons
       Name = "ToolButtonExit"
-      MoveScaled(21,0,4,4)
+      MoveScaled(20,0,4,4)
       ToolTip = ("Exit the program")
       Picture = Picture["icon:/22/close"]
     }
+    { Panel7 Panel
+      MoveScaled(27,0,2,3)
+    }
+    { ToolButtonOnePlayer ToolButton AllToolButtons
+      Name = "ToolButtonOnePlayer"
+      MoveScaled(31,0,4,4)
+      Font = Font["Bold,+2"]
+      ToolTip = ("1 Player or 2")
+      Text = ("2")
+      Border = True
+    }
     { Panel2 Panel
-      MoveScaled(26,0,2,3)
+      MoveScaled(36,0,2,3)
     }
     { ToolButtonAbout ToolButton AllToolButtons
       Name = "ToolButtonAbout"
-      MoveScaled(29,0,4,4)
+      MoveScaled(39,0,4,4)
       ToolTip = ("About")
       Picture = Picture["icon:/22/info"]
     }
     { Panel4 Panel
-      MoveScaled(38,0,7,3)
+      MoveScaled(45,1,7,3)
       Expand = True
     }
     { LCDLabelLScore LCDLabel
-      MoveScaled(49,-1,7,4)
+      MoveScaled(55,0,7,4)
       Background = Color.Black
       Foreground = Color.Yellow
       Alignment = Align.Center
@@ -55,12 +66,12 @@
       HighlightColor = Color.Red
     }
     { LabelTop Label
-      MoveScaled(52,0,38,3)
+      MoveScaled(65,0,27,3)
       Font = Font["Bold,+6"]
       Alignment = Align.Center
     }
     { LCDLabelRScore LCDLabel
-      MoveScaled(93,0,7,4)
+      MoveScaled(96,0,7,4)
       Background = Color.Black
       Foreground = Color.Yellow
       Alignment = Align.Center
@@ -68,11 +79,11 @@
       HighlightColor = Color.Red
     }
     { Panel3 Panel
-      MoveScaled(102,0,7,3)
+      MoveScaled(105,-1,7,3)
       Expand = True
     }
     { Panel5 Panel
-      MoveScaled(124,1,22,2)
+      MoveScaled(117,1,28,2)
     }
   }
   { PanelPlayArea Panel
@@ -86,5 +97,9 @@
   { Timer1 #Timer
     #MoveScaled(134,36)
     Delay = 100
+  }
+  { TimerKeys #Timer
+    #MoveScaled(132,59)
+    Delay = 1
   }
 }
