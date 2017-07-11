@@ -1,25 +1,22 @@
 ' Gambas class file
 
-' Added keyboard speed settings and delay controls to improve bat response 04/07/2017
-
-Public siBatL As Short                                                                          'LH Bat position
-Public siBatR As Short                                                                          'RH bat position
-Public siRScore As Short                                                                        'RH Score
-Public siLScore As Short                                                                        'LH Score
-Public BatL As Bat                                                                              'LH Bat
-Public BatR As Bat                                                                              'RH Bat
-Public bGameEnd As Boolean                                                                      'Game over indicator
-Public bGameStart As Boolean                                                                    'Game start indicator
-Public bNewGame As Boolean                                                                      'New game indicator
-Public bA As Boolean
-Public bZ As Boolean
-Public bUp As Boolean
-Public bDown As Boolean
-Public b1Player As Boolean
+siBatL As Short                                                                                 'LH Bat position
+siBatR As Short                                                                                 'RH bat position
+siRScore As Short                                                                               'RH Score
+siLScore As Short                                                                               'LH Score
+BatL As Bat                                                                                     'LH Bat
+BatR As Bat                                                                                     'RH Bat
+bGameEnd As Boolean                                                                             'Game over indicator
+bGameStart As Boolean                                                                           'Game start indicator
+bNewGame As Boolean                                                                             'New game indicator
+bA As Boolean                                                                                   'Control of the 'A' key
+bZ As Boolean                                                                                   'Control of the 'Z' key
+bUp As Boolean                                                                                  'Control of the 'Up' key
+bDown As Boolean                                                                                'Control of the 'Down' key
+b1Player As Boolean                                                                             'Number of players, 1 or 2
 
 Public Sub Form_Open()
 
-'Stop Event
 SetUpLCDs                                                                                       'Set up the Score displays
 Settings.Read(Me, "Window")                                                                     'Get the window settings
 
@@ -69,10 +66,11 @@ End
 
 Public Sub Start()                                                                              'Game on..
 Dim hBall As Ball                                                                               'The ball
-Dim siX, siY, siR1, siR2, siRand, siBounce As Short                                                               'Various variables
+Dim siX, siY, siR1, siR2, siRand, siBounce, siStuck As Short                                    'Various variables
 Dim bSwitchLR, bSwitchDown As Boolean                                                           'To control the ball's direct
+Dim fSpeed As Float = 0.01
 
-TimerKeys.Start
+TimerKeys.Start                                                                                 'Controls the key presses for the 'Bats'
 
 bGameStart = True                                                                               'Set bGameStart to True
 hBall = New Ball(PanelPlayArea)                                                                 'Add the ball to the 'Play area'
@@ -94,16 +92,26 @@ BatR.X = PanelPlayArea.Width - (BatR.Width + 5)                                 
 BatR.Y = siBatR                                                                                 'Set the Bat's position
 bNewGame = False                                                                                'Set the bNewGame to false. This stops the Bats being repositioned with each new Ball
 
-If b1Player Then 
-  BatL.Height = PanelPlayArea.Height
-  BatL.Y = 0
+If b1Player Then                                                                                'If only 1 player mode is selected then..
+  BatL.Height = PanelPlayArea.Height                                                            'Make the LH Bat fill the 'Play area' 
+  BatL.Y = 0                                                                                    'Position the Bat
+  LCDLabelRScore.Visible = False                                                                'Hide the RH score LCD display
+Else                                                                                            'Else
+  LCDLabelRScore.Visible = True                                                                 'Show the RH score LCD display
 End If
 
-LabelTop.Text = 2                                                                               'Display "2" in LabelTop
+LabelStart.Visible = True                                                                       'Show the Start label
+LabelStart.y = PanelPlayArea.Y                                                                  'Position it at the top of the 'Play area'
+LabelStart.Alignment = Align.Top                                                                'Align the text 'Top'
+LabelStart.Text = 3                                                                             'Display "3"
 Wait 1                                                                                          'Wait a second
-LabelTop.Text = 1                                                                               'Display "1" in LabelTop
+LabelStart.Text = 2                                                                             'Display "2" 
 Wait 1                                                                                          'Wait a second
-LabelTop.Text = ""
+LabelStart.Text = 1                                                                             'Display "1" 
+Wait 1                                                                                          'Wait a second
+LabelStart.Text = ""                                                                            'Delete the text
+LabelStart.Visible = True                                                                       'Hide the Label
+
 Mouse.move(0, 0)                                                                                'Move the mouse cursor to the corner of the screen
 
 siR1 = Rand(0, 1)                                                                               'Get a random number between 0 and 1
@@ -112,49 +120,46 @@ siR2 = Rand(0, 1)                                                               
 If siR1 = 1 Then bSwitchDown = True                                                             'Randomize - Will the ball go up or down?
 If siR2 = 1 Then bSwitchLR = True                                                               'Randomize - Will the ball go left or right?
 
-siRand = Rand(1, 3)
+siRand = Rand(0, 2)                                                                             'Set a random value for siRand
 
 Do
-  Wait 0.01                                                                                    'Ball speed control
+  siStuck = siY                                                                                 'To stop the ball just bouncing between the Bats with no need for user input
+  If siRand > 4 Then siRand -= Rand(0, 5)                                                       'If the Ball's angle get too great randomize it
+  Wait fSpeed                                                                                   'Ball speed control
   If bSwitchDown Then                                                                           'If the Ball is going down then..
-    'Inc siY                                                                                     'Increase siY
-    siY += siRand
+    siY += siRand                                                                               'Increase the Ball's vertical position
   Else                                                                                          'Else the Ball is going up so..
-    'Dec siY                                                                                     'Decrease siY
-    siY -= siRand
+    siY -= siRand                                                                               'Dncrease the Ball's vertical position
   End If
   
   If siY >= BatL.Y And siY <= BatL.y + BatL.H And siX < 25 Then                                 'If the Ball 'touches' the LH Bat then
-    siRand += BounceAngle(siY, False)
+    siRand += Rand(0, 1)                                                                        'Add an extra randon value
     bSwitchLR = True                                                                            'Set switch to True
+    fSpeed -= 0.00005                                                                           'Decrease the delay (The Ball will move faster)
   End If 
   
-  If siY >= PanelPlayArea.Height Then bSwitchDown = False                                       'If the Ball has reached the top of the 'Play area' change its direction
-  If siY <= 0 Then bSwitchDown = True                                                            'If the Ball has reached the bottom of the 'Play area' change its direction
+  If siY >= PanelPlayArea.Height - hBall.Height Then bSwitchDown = False                        'If the Ball has reached the top of the 'Play area' change its direction
+  If siY <= 0 Then bSwitchDown = True                                                           'If the Ball has reached the bottom of the 'Play area' change its direction
  
- 'LabelTop.text = siY
-
-
   If bSwitchLR Then                                                                             'If the Ball is going right then..
-    'Inc siX                                                                                     'Increase siX
-    siX += 5
+    siX += 5                                                                                    'Increase the Ball's hortzontal position
   Else                                                                                          'Else the Ball is going left so..
-    'Dec siX                                                                                     'Decrease siX
-    siX -= 5
+    siX -= 5                                                                                    'Decrease the Ball's hortzontal position
   End If
 
   If siY >= BatR.Y And siY <= BatR.y + BatR.H And siX > PanelPlayArea.Width - (BatR.Width + 5 + hBall.Width) Then 'If the Ball 'touches' the RH Bat then
-    siRand += BounceAngle(siY, True)
+    siRand += Rand(0, 1)                                                                        'Add an extra random value
     bSwitchLR = False                                                                           'Change the Ball's direction
+    fSpeed -= 0.00005                                                                           'Decrease the delay (The Ball will move faster)
   End If 
   
-  If siX < -10 Then                                                                              'If the Ball was not 'Batted' by the LH Bat then..
+  If siX < -10 Then                                                                             'If the Ball was not 'Batted' by the LH Bat then..
     Inc siLScore                                                                                'Increase the RH score
     If siLScore > 998 Then bGameEnd = True                                                      'If you get to 999 that's enough!
     Break                                                                                       'Get out of here
   Endif
 
-  If siX > PanelPlayArea.Width + 10 Then                                                         'If the Ball was not 'Batted' by the RH Bat then..
+  If siX > PanelPlayArea.Width + 10 Then                                                        'If the Ball was not 'Batted' by the RH Bat then..
     Inc siRScore                                                                                'Increase the LH score
     If siLScore > 998 Then bGameEnd = True                                                      'If you get to 999 that's enough!
     Break                                                                                       'Get out of here
@@ -173,9 +178,11 @@ Do
    Break                                                                                        'Get out of here
  Endif
 
+If siStuck = siY Then siRand += 1                                                               'If the Ball is 'stuck' bouncing horizontally then change the angle
+
 Loop                                                                                            'End of Do..Loop
 
-TimerKeys.Stop
+TimerKeys.Stop                                                                                  'Stop reading the key presses
 
 bGameStart = False                                                                              'Set bGameStart to False
 PanelPlayArea.Children.clear                                                                    'Clear the 'Play area' of Bats and Ball
@@ -187,60 +194,39 @@ Wait                                                                            
 
 End
 
-Public Sub BounceAngle(siY As Short, bLR As Boolean) As Short
-Dim siTMB, siReturn As Short
-
-If bLR Then 
-  siTMB = ((siY - BatR.Y) / BatR.Height) * 100
-Else
-  siTMB = ((siY - BatL.Y) / BatL.Height) * 100
-End If
-
-If siTMB <= 33 Then siReturn = -1
-If siTMB >= 66 Then siReturn = 1
-If siTMB > 33 And siTMB < 66 Then siReturn = 0
-
-'LabelTop.Text = "Bat pos " & siReturn
-
-Return siReturn
-
-'Stop
-
-End
-
 Public Sub Form_KeyPress()                                                                      'To capture the users key presses
 Dim iCode As Integer = Key.Code                                                                 'Store the pressed key
 
 If bGameStart = False Then Return                                                               'If the game has not started, get out of here
 
 If iCode = Key.Esc Then bGameEnd = True                                                         'If the [Esc] key is pressed then set bGameEnd to True
-If iCode = Key["A"] Then bA = True
-If iCode = Key["Z"] Then bZ = True
-If iCode = Key.Up Then bUp = True
-If iCode = Key.Down Then bDown = True
+If iCode = Key["A"] Then bA = True                                                              'If the "A" key is pressed set bA to True
+If iCode = Key["Z"] Then bZ = True                                                              'If the "Z" key is pressed set bZ to True
+If iCode = Key.Up Then bUp = True                                                               'If the "Up" key is pressed set bUp to True
+If iCode = Key.Down Then bDown = True                                                           'If the "Down" key is pressed set bDown to True
 
 End
 
-Public Sub Form_KeyRelease()
+Public Sub Form_KeyRelease()                                                                    'To capture the users key releases
 Dim iCode As Integer = Key.Code                                                                 'Store the pressed key
 
 If bGameStart = False Then Return                                                               'If the game has not started, get out of here
 
-If iCode = Key.Esc Then bGameEnd = False                                                         'If the [Esc] key is pressed then set bGameEnd to False
-If iCode = Key["A"] Then bA = False
-If iCode = Key["Z"] Then bZ = False
-If iCode = Key.Up Then bUp = False
-If iCode = Key.Down Then bDown = False
+If iCode = Key.Esc Then bGameEnd = False                                                        'If the [Esc] key is released then set bGameEnd to False
+If iCode = Key["A"] Then bA = False                                                             'If the "A" key is released set bA to False
+If iCode = Key["Z"] Then bZ = False                                                             'If the "Z" key is released set bZ to False
+If iCode = Key.Up Then bUp = False                                                              'If the "Up" key is released set bUp to False
+If iCode = Key.Down Then bDown = False                                                          'If the "Down" key is released set bDown to False
 
 End
 
-Public Sub TimerKeys_Timer()
-Dim byMove As Byte = 8
+Public Sub TimerKeys_Timer()                                                                    'Timer to move the Bats
+Dim byMove As Byte = 8                                                                          'Amount of Bat movement
 
-If bA Then siBatL -= byMove 
-If bZ Then siBatL += byMove
-If bUp Then siBatR -= byMove 
-If bDown Then siBatR += byMove
+If bA Then siBatL -= byMove                                                                     'If bA is True move the LH Bat up
+If bZ Then siBatL += byMove                                                                     'If bZ is True move the LH Bat down
+If bUp Then siBatR -= byMove                                                                    'If bUp is True move the RH Bat up
+If bDown Then siBatR += byMove                                                                  'If bDown is True move the RH Bat down
 
 If siBatL < 0 Then siBatL = 0                                                                   'If the LH Bat is at the top of the area stop it running off the screen
 If siBatL > PanelPlayArea.Height - BatL.Height Then siBatL = PanelPlayArea.Height - BatL.Height 'If the LH Bat is at the bottom of the area stop it running off the screen
@@ -283,12 +269,12 @@ Select Case sKey                                                                
     About.ShowModal                                                                             'Show the about Form
   Case "ToolButtonExit"                                                                         'If it's the 'Exit' button then..
     Me.Close                                                                                    'Close the Form
-  Case "ToolButtonOnePlayer"
-    b1Player = Not b1Player
-    If b1Player Then 
-      ToolButtonOnePlayer.Text = "1" 
-    Else 
-      ToolButtonOnePlayer.Text = "2" 
+  Case "ToolButtonOnePlayer"                                                                    'If it's the 'One Player' button then..
+    b1Player = Not b1Player                                                                     'Reverse b1Player value
+    If b1Player Then                                                                            'If b1Player is True then..
+      ToolButtonOnePlayer.Text = "1"                                                            'Set the button text to '1'
+    Else                                                                                        'Else
+      ToolButtonOnePlayer.Text = "2"                                                            'Set the button text to '2'
     Endif
 End Select
 
@@ -296,11 +282,13 @@ End
 
 Public Sub Form_Close()                                                                         'When the program closes
 
-FMain.Hide
-AllToolButtons_Click("ToolButtonStop")
-AllToolButtons_Click("ToolButtonExit")
+'TODO: This needs sorting as the form wont close if game is in play
+
+FMain.Hide                                                                                      'Hide Fmain Form
+AllToolButtons_Click("ToolButtonStop")                                                          'Click Stop the game
+AllToolButtons_Click("ToolButtonExit")                                                          'Click Exit the program
 Settings.Write(Me, "Window")                                                                    'Save the Forms layout on the screen
-Me.Close
+FMain.Close                                                                                     'Bye bye..
 
 End
 
