@@ -18,40 +18,43 @@
     { Panel1 Panel
       MoveScaled(7,0,2,3)
     }
-    { ToolButtonPlay ToolButton AllToolButtons
-      Name = "ToolButtonPlay"
-      MoveScaled(12,0,4,4)
-      ToolTip = ("Start - Get ready!")
-      Picture = Picture["icon:/22/play"]
-    }
-    { Panel6 Panel
-      MoveScaled(17,0,2,3)
-    }
-    { ToolButtonExit ToolButton AllToolButtons
-      Name = "ToolButtonExit"
-      MoveScaled(20,0,4,4)
-      ToolTip = ("Exit the program")
-      Picture = Picture["icon:/22/close"]
-    }
-    { Panel7 Panel
-      MoveScaled(27,0,2,3)
-    }
-    { ToolButtonOnePlayer ToolButton AllToolButtons
-      Name = "ToolButtonOnePlayer"
-      MoveScaled(31,0,4,4)
-      Font = Font["Bold,+2"]
-      ToolTip = ("1 Player or 2")
-      Text = ("2")
-      Border = True
-    }
-    { Panel2 Panel
-      MoveScaled(36,0,2,3)
-    }
-    { ToolButtonAbout ToolButton AllToolButtons
-      Name = "ToolButtonAbout"
-      MoveScaled(39,0,4,4)
-      ToolTip = ("About")
-      Picture = Picture["icon:/22/info"]
+    { PanelTools HBox
+      MoveScaled(12,0,32,4)
+      { ToolButtonPlay ToolButton AllToolButtons
+        Name = "ToolButtonPlay"
+        MoveScaled(0,0,4,4)
+        ToolTip = ("Start - Get ready!")
+        Picture = Picture["icon:/22/play"]
+      }
+      { Panel6 Panel
+        MoveScaled(5,0,2,3)
+      }
+      { ToolButtonExit ToolButton AllToolButtons
+        Name = "ToolButtonExit"
+        MoveScaled(8,0,4,4)
+        ToolTip = ("Exit the program")
+        Picture = Picture["icon:/22/close"]
+      }
+      { Panel7 Panel
+        MoveScaled(15,0,2,3)
+      }
+      { ToolButtonOnePlayer ToolButton AllToolButtons
+        Name = "ToolButtonOnePlayer"
+        MoveScaled(19,0,4,4)
+        Font = Font["Bold,+2"]
+        ToolTip = ("1 Player or 2")
+        Text = ("2")
+        Border = True
+      }
+      { Panel2 Panel
+        MoveScaled(24,0,2,3)
+      }
+      { ToolButtonAbout ToolButton AllToolButtons
+        Name = "ToolButtonAbout"
+        MoveScaled(27,0,4,4)
+        ToolTip = ("About")
+        Picture = Picture["icon:/22/info"]
+      }
     }
     { Panel4 Panel
       MoveScaled(45,1,7,3)
@@ -83,7 +86,7 @@
       Expand = True
     }
     { Panel5 Panel
-      MoveScaled(117,1,28,2)
+      MoveScaled(117,1,38,2)
     }
   }
   { PanelPlayArea Panel

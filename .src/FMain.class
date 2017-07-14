@@ -55,10 +55,15 @@ With LabelStart                                                                 
   .Y = PanelPlayArea.Y                                                                          'Set the vertical position
   .Font.Size = PanelPlayArea.Width / 50                                                         'Set the font height
   .Font.Bold = True                                                                             'Set the font to bold
-  .Text = "Pong\n\nLeft keys ' A ' & ' Z '\nRight keys [Up Arrow] & [Down Arrow]"               'Set the text
   .Alignment = Align.Center                                                                     'Align it in the centre
   .Foreground = Color.White                                                                     'Set the font's colour
 End With
+
+If ToolButtonOnePlayer.text = "2" Then 
+  LabelStart.Text = "Pong\n\nLeft keys ' A ' & ' Z '\nRight keys [Up Arrow] & [Down Arrow]"               'Set the text
+Else
+  LabelStart.Text = "Pong\n\nKeys [Up Arrow] & [Down Arrow]"               'Set the text
+End If 
 
 PanelPlayArea.Background = Color.Black                                                          'Background colour
 
@@ -199,7 +204,10 @@ Dim iCode As Integer = Key.Code                                                 
 
 If bGameStart = False Then Return                                                               'If the game has not started, get out of here
 
-If iCode = Key.Esc Then bGameEnd = True                                                         'If the [Esc] key is pressed then set bGameEnd to True
+If iCode = Key.Esc Then 
+  bGameEnd = True                                                         'If the [Esc] key is pressed then set bGameEnd to True
+  PanelTools.Enabled = True
+End If
 If iCode = Key["A"] Then bA = True                                                              'If the "A" key is pressed set bA to True
 If iCode = Key["Z"] Then bZ = True                                                              'If the "Z" key is pressed set bZ to True
 If iCode = Key.Up Then bUp = True                                                               'If the "Up" key is pressed set bUp to True
@@ -254,8 +262,10 @@ If Not sKey Then sKey = Last.name                                               
 
 Select Case sKey                                                                                'Depending what's in sKey..
   Case "ToolButtonStop"                                                                         'If it's the 'Stop' button then..
+    PanelTools.Enabled = True
     bGameEnd = True                                                                             'Set bEndGame to True
   Case "ToolButtonPlay"                                                                         'If it's the 'Play' button then..
+    PanelTools.Enabled = False
     siLScore = 0                                                                                'Set the LH score to 0
     siRScore = 0                                                                                'Set the RH score to 0
     SetUpLCDs                                                                                   'Set up the LCD score displays
@@ -273,8 +283,10 @@ Select Case sKey                                                                
     b1Player = Not b1Player                                                                     'Reverse b1Player value
     If b1Player Then                                                                            'If b1Player is True then..
       ToolButtonOnePlayer.Text = "1"                                                            'Set the button text to '1'
+      StartDisplay
     Else                                                                                        'Else
       ToolButtonOnePlayer.Text = "2"                                                            'Set the button text to '2'
+      StartDisplay
     Endif
 End Select
 
