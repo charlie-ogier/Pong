@@ -5,9 +5,7 @@ Pong
 0.2.0
 
 gb.image
-gb.gtk3
+gb.qt4
 gb.form
 gb.settings
-gb.media
-gb.media.form
 

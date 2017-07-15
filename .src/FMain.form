@@ -5,7 +5,7 @@
   Icon = Picture["icon1.png"]
   Padding = 10
   { HBoxControl HBox
-    MoveScaled(0,0,140,4)
+    MoveScaled(0,0,165,4)
     Background = Color.Background
     Expand = True
     Padding = 2
@@ -85,17 +85,15 @@
       MoveScaled(105,-1,7,3)
       Expand = True
     }
-    { Panel5 Panel
-      MoveScaled(117,1,38,2)
+    { TextLabelVer TextLabel
+      MoveScaled(125,0,38,3)
+      Font = Font["-2"]
+      Alignment = Align.Right
     }
   }
   { PanelPlayArea Panel
     MoveScaled(6,8,97,54)
     Expand = True
-  }
-  { LabelStart Label
-    MoveScaled(30,13,54,27)
-    Visible = False
   }
   { Timer1 #Timer
     #MoveScaled(134,36)
@@ -103,6 +101,10 @@
   }
   { TimerKeys #Timer
     #MoveScaled(132,59)
-    Delay = 1
+    Delay = 10
+  }
+  { LabelStart Label
+    MoveScaled(30,13,54,27)
+    Visible = False
   }
 }

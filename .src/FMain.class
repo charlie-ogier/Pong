@@ -14,11 +14,13 @@ bZ As Boolean                                                                   
 bUp As Boolean                                                                                  'Control of the 'Up' key
 bDown As Boolean                                                                                'Control of the 'Down' key
 b1Player As Boolean                                                                             'Number of players, 1 or 2
+bExit As Boolean = True                                                                         'To control when the program terminates
 
 Public Sub Form_Open()
 
 SetUpLCDs                                                                                       'Set up the Score displays
 Settings.Read(Me, "Window")                                                                     'Get the window settings
+TextLabelVer.text = "Version 0.1.0"                                                             'Display the version number
 
 End
 
@@ -32,11 +34,13 @@ End
 Public Sub GamePlay()                                                                           'Let's play!
 
 FMain.Resizable = False                                                                         'Stop the screen being resized during play
+bExit = False                                                                                   'Don't allow the program to be closed
 
 While bGameEnd = False                                                                          'While the game is still being played..
   Start                                                                                         'Add another Ball and play..
 Wend
 
+bExit = True                                                                                    'Allow the program to be closed
 bGameEnd = False                                                                                'Reset variable
 FMain.Resizable = True                                                                          'Allow screen resizing
 PanelPlayArea.Children.Clear                                                                    'Clear the 'Play area of bats and ball'
@@ -59,10 +63,10 @@ With LabelStart                                                                 
   .Foreground = Color.White                                                                     'Set the font's colour
 End With
 
-If ToolButtonOnePlayer.text = "2" Then 
-  LabelStart.Text = "Pong\n\nLeft keys ' A ' & ' Z '\nRight keys [Up Arrow] & [Down Arrow]"               'Set the text
+If ToolButtonOnePlayer.text = "2" Then                                                          'Depending on the 1 or 2 player selected
+  LabelStart.Text = "Pong\n\nLeft keys ' A ' & ' Z '\nRight keys [Up Arrow] & [Down Arrow]"     'Set the text
 Else
-  LabelStart.Text = "Pong\n\nKeys [Up Arrow] & [Down Arrow]"               'Set the text
+  LabelStart.Text = "Pong\n\nKeys [Up Arrow] & [Down Arrow]"                                    'Set the text
 End If 
 
 PanelPlayArea.Background = Color.Black                                                          'Background colour
@@ -116,8 +120,6 @@ LabelStart.Text = 1                                                             
 Wait 1                                                                                          'Wait a second
 LabelStart.Text = ""                                                                            'Delete the text
 LabelStart.Visible = True                                                                       'Hide the Label
-
-Mouse.move(0, 0)                                                                                'Move the mouse cursor to the corner of the screen
 
 siR1 = Rand(0, 1)                                                                               'Get a random number between 0 and 1
 siR2 = Rand(0, 1)                                                                               'Get a random number between 0 and 1
@@ -204,10 +206,11 @@ Dim iCode As Integer = Key.Code                                                 
 
 If bGameStart = False Then Return                                                               'If the game has not started, get out of here
 
-If iCode = Key.Esc Then 
-  bGameEnd = True                                                         'If the [Esc] key is pressed then set bGameEnd to True
-  PanelTools.Enabled = True
+If iCode = Key.Esc Then                                                                         'If the [Esc] key is pressed then..
+  bGameEnd = True                                                                               'Set bGameEnd to True
+  PanelTools.Enabled = True                                                                     'Enable the Tools Panel
 End If
+
 If iCode = Key["A"] Then bA = True                                                              'If the "A" key is pressed set bA to True
 If iCode = Key["Z"] Then bZ = True                                                              'If the "Z" key is pressed set bZ to True
 If iCode = Key.Up Then bUp = True                                                               'If the "Up" key is pressed set bUp to True
@@ -262,10 +265,10 @@ If Not sKey Then sKey = Last.name                                               
 
 Select Case sKey                                                                                'Depending what's in sKey..
   Case "ToolButtonStop"                                                                         'If it's the 'Stop' button then..
-    PanelTools.Enabled = True
+    PanelTools.Enabled = True                                                                   'Enable the Tool Panel
     bGameEnd = True                                                                             'Set bEndGame to True
   Case "ToolButtonPlay"                                                                         'If it's the 'Play' button then..
-    PanelTools.Enabled = False
+    PanelTools.Enabled = False                                                                  'Disable the Tool Panel
     siLScore = 0                                                                                'Set the LH score to 0
     siRScore = 0                                                                                'Set the RH score to 0
     SetUpLCDs                                                                                   'Set up the LCD score displays
@@ -278,15 +281,16 @@ Select Case sKey                                                                
   Case "ToolButtonAbout"                                                                        'If it's the 'About' button then..
     About.ShowModal                                                                             'Show the about Form
   Case "ToolButtonExit"                                                                         'If it's the 'Exit' button then..
+    bExit = True                                                                                'Allow the program to close
     Me.Close                                                                                    'Close the Form
   Case "ToolButtonOnePlayer"                                                                    'If it's the 'One Player' button then..
     b1Player = Not b1Player                                                                     'Reverse b1Player value
     If b1Player Then                                                                            'If b1Player is True then..
       ToolButtonOnePlayer.Text = "1"                                                            'Set the button text to '1'
-      StartDisplay
+      StartDisplay                                                                              'Run the StartDisplay routine
     Else                                                                                        'Else
       ToolButtonOnePlayer.Text = "2"                                                            'Set the button text to '2'
-      StartDisplay
+      StartDisplay                                                                              'Run the StartDisplay routine
     Endif
 End Select
 
@@ -294,13 +298,8 @@ End
 
 Public Sub Form_Close()                                                                         'When the program closes
 
-'TODO: This needs sorting as the form wont close if game is in play
-
-FMain.Hide                                                                                      'Hide Fmain Form
-AllToolButtons_Click("ToolButtonStop")                                                          'Click Stop the game
-AllToolButtons_Click("ToolButtonExit")                                                          'Click Exit the program
+If Not bExit Then Stop Event                                                                    'If bExit is False then cancel the close Event 
 Settings.Write(Me, "Window")                                                                    'Save the Forms layout on the screen
-FMain.Close                                                                                     'Bye bye..
 
 End
 
