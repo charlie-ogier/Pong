@@ -3,13 +3,13 @@
 Title=Pong
 Startup=FMain
 Icon=icon1.png
-Version=0.2.0
+Version=0.1.0
 Component=gb.image
 Component=gb.qt4
 Component=gb.form
 Component=gb.settings
 Description="The game of Pong"
-Authors="Charlie Ogier 2017\nOn GitHub 02/07/2017"
+Authors="Charlie Ogier 2017"
 Environment="GB_GUI=gb.gtk"
 TabSize=2
 Translate=1
@@ -17,3 +17,5 @@ Language=en_GB
 CreateShortcut=1
 Vendor=cogier
 Packager=1
+Tags=Game
+CreateMenu=1

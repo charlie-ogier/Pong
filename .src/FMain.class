@@ -75,7 +75,7 @@ End
 
 Public Sub Start()                                                                              'Game on..
 Dim hBall As Ball                                                                               'The ball
-Dim siX, siY, siR1, siR2, siRand, siBounce, siStuck As Short                                    'Various variables
+Dim siX, siY, siR1, siR2, siRand, siStuck As Short                                              'Various variables
 Dim bSwitchLR, bSwitchDown As Boolean                                                           'To control the ball's direct
 Dim fSpeed As Float = 0.01
 

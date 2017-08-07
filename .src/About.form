@@ -1,7 +1,7 @@
 # Gambas Form File 3.0
 
 { Form Form
-  MoveScaled(0,0,78,66)
+  MoveScaled(0,0,101,67)
   Icon = Picture["icon1.png"]
   Arrangement = Arrange.Vertical
   Padding = 5
